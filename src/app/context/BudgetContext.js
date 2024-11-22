@@ -74,6 +74,17 @@ export function BudgetProvider({ children }) {
         );
     };
 
+    const updateTransaction = (transactionId, updatedData) => {
+        setBudget(prev => ({
+            ...prev,
+            transactions: prev.transactions.map(transaction =>
+                transaction.id === transactionId
+                    ? { ...transaction, ...updatedData }
+                    : transaction
+            )
+        }))
+    }
+
     const addCategory = (category) => {
         const newCategory = {
             ...category,
@@ -84,6 +95,17 @@ export function BudgetProvider({ children }) {
             ...prev,
             categories: [...prev.categories, newCategory]
         }));
+    };
+
+    const updateCategory = (categoryId, updatedData) => {
+        setBudget(prev => ({
+            ...prev,
+            categories: prev.categories.map(category =>
+                category.id === categoryId
+                    ? { ...category, ...updatedData }
+                    : category
+            )
+        }))
     };
 
     const getCategorySpending = (categoryId) => {
@@ -111,7 +133,9 @@ export function BudgetProvider({ children }) {
         <BudgetContext.Provider value={{
             budget,
             addTransaction,
+            updateTransaction,
             addCategory,
+            updateCategory,
             getCategorySpending,
             deleteCategory,
             deleteTransaction,

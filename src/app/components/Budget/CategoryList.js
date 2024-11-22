@@ -1,10 +1,14 @@
 'use client'
 
 import { useBudget } from "@/app/context/BudgetContext"
+import { useState } from "react";
+import EditCategoryModal from "./EditCategoryModal";
 
 export default function CategoryList() {
 
     const { budget, deleteCategory } = useBudget();
+
+    const [editingCategory, setEditingCategory] = useState(null);
 
     const getCategoryTotal = (categoryId, categoryType) => {
         return budget.transactions
@@ -50,12 +54,20 @@ export default function CategoryList() {
                                             </span>
                                         </div>
                                     </div>
-                                    <button
-                                        onClick={() => deleteCategory(category.id)}
-                                        className="text-red-500 hover:text-red-700"
-                                    >
-                                        Sil
-                                    </button>
+                                    <div className="flex items-center space-x-2">
+                                        <button
+                                            onClick={() => setEditingCategory(category)}
+                                            className="text-blue-500 hover:text-blue-700"
+                                        >
+                                            Düzenle
+                                        </button>
+                                        <button
+                                            onClick={() => deleteCategory(category.id)}
+                                            className="text-red-500 hover:text-red-700"
+                                        >
+                                            Sil
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <div className="space-y-1">
@@ -70,16 +82,16 @@ export default function CategoryList() {
                                             })}
                                         </span>
                                         <span className={`font-medium ${category.type === 'income'
-                                                ? percentage >= 100
-                                                    ? 'text-green-500'
-                                                    : percentage >= 80
-                                                        ? 'text-blue-500'
-                                                        : 'text-gray-500'
-                                                : percentage >= 100
-                                                    ? 'text-red-500'
-                                                    : percentage >= 80
-                                                        ? 'text-orange-500'
-                                                        : 'text-green-500'
+                                            ? percentage >= 100
+                                                ? 'text-green-500'
+                                                : percentage >= 80
+                                                    ? 'text-blue-500'
+                                                    : 'text-gray-500'
+                                            : percentage >= 100
+                                                ? 'text-red-500'
+                                                : percentage >= 80
+                                                    ? 'text-orange-500'
+                                                    : 'text-green-500'
                                             }`}>
                                             {percentage.toFixed(1)}%
                                         </span>
@@ -88,16 +100,16 @@ export default function CategoryList() {
                                     <div className="w-full bg-gray-200 rounded-full h-2">
                                         <div
                                             className={`h-2 rounded-full ${category.type === 'income'
-                                                    ? percentage >= 100
-                                                        ? 'bg-green-500'
-                                                        : percentage >= 80
-                                                            ? 'bg-blue-500'
-                                                            : 'bg-gray-400'
-                                                    : percentage >= 100
-                                                        ? 'bg-red-500'
-                                                        : percentage >= 80
-                                                            ? 'bg-orange-500'
-                                                            : 'bg-green-500'
+                                                ? percentage >= 100
+                                                    ? 'bg-green-500'
+                                                    : percentage >= 80
+                                                        ? 'bg-blue-500'
+                                                        : 'bg-gray-400'
+                                                : percentage >= 100
+                                                    ? 'bg-red-500'
+                                                    : percentage >= 80
+                                                        ? 'bg-orange-500'
+                                                        : 'bg-green-500'
                                                 }`}
                                             style={{ width: `${Math.min(percentage, 100)}%` }}
                                         />
@@ -108,6 +120,13 @@ export default function CategoryList() {
                     })
                 )}
             </div>
+
+            {editingCategory && (
+                <EditCategoryModal
+                    category={editingCategory}
+                    onClose={() => setEditingCategory(null)}
+                />
+            )}
         </div>
     )
 }

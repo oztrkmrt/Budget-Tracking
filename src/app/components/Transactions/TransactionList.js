@@ -3,10 +3,14 @@
 import { useBudget } from "@/app/context/BudgetContext";
 import { format } from 'date-fns';
 import { tr } from 'date-fns/locale';
+import { useState } from "react";
+import EditTransactionModal from "./EditTransactionModal";
 
 export default function TransactionList() {
 
     const { budget, deleteTransaction } = useBudget();
+
+    const [editingTransaction, setEditingTransaction] = useState(null)
 
     const getCategoryName = (categoryId) => {
         const category = budget.categories.find(c => c.id === categoryId)
@@ -52,17 +56,32 @@ export default function TransactionList() {
                                             {format(new Date(transaction.date), 'dd MMMM yyyy', { locale: tr })}
                                         </span>
                                     </div>
-                                    <button
-                                        onClick={() => deleteTransaction(transaction.id)}
-                                        className="text-red-500 hover:text-red-700"
-                                    >
-                                        Sil
-                                    </button>
+                                    <div className="flex items-center space-x-2">
+                                        <button
+                                            onClick={() => setEditingTransaction(transaction)}
+                                            className="text-blue-500 hover:text-blue-700"
+                                        >
+                                            Düzenle
+                                        </button>
+                                        <button
+                                            onClick={() => deleteTransaction(transaction.id)}
+                                            className="text-red-500 hover:text-red-700"
+                                        >
+                                            Sil
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
+            )}
+
+            {editingTransaction && (
+                <EditTransactionModal
+                    transaction={editingTransaction}
+                    onClose={() => setEditingTransaction(null)}
+                />
             )}
         </div>
     )
