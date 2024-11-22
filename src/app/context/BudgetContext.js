@@ -9,6 +9,48 @@ export function BudgetProvider({ children }) {
         transactions: []
     });
 
+    const [alerts, setAlerts] = useState([]);
+
+    const checkLimitWarnings = () => {
+        const newAlerts = []
+        budget.categories
+            .filter(category => category.type === 'expense')
+            .forEach(category => {
+                const total = budget.transactions
+                    .filter(t => t.categoryId === category.id && t.type === 'expense')
+                    .reduce((sum, t) => sum + t.amount, 0)
+
+                const percentage = (total / category.limit) * 100
+
+                if (percentage >= 80 && percentage < 100) {
+                    newAlerts.push({
+                        id: crypto.randomUUID(),
+                        categoryId: category.id,
+                        categoryName: category.name,
+                        message: `${category.name} kategorisinde harcama limitinin %${percentage.toFixed(1)}'ine ulaştınız!`,
+                        type: 'warning'
+                    })
+                } else if (percentage >= 100) {
+                    newAlerts.push({
+                        id: crypto.randomUUID(),
+                        categoryId: category.id,
+                        categoryName: category.name,
+                        message: `${category.name} kategorisinde harcama limitini aştınız!`,
+                        type: 'danger'
+                    })
+                }
+            })
+        setAlerts(newAlerts)
+    };
+
+    useEffect(() => {
+        checkLimitWarnings()
+    }, [budget.transactions])
+
+    const removeAlert = (alertId) => {
+        setAlerts(prev => prev.filter(alert => alert.id !== alertId))
+    }
+
     useEffect(() => {
         const savedBudget = localStorage.getItem('budget')
         if (savedBudget) {
@@ -50,12 +92,31 @@ export function BudgetProvider({ children }) {
             .reduce((total, t) => total + t.amount, 0);
     };
 
+    const deleteCategory = (categoryId) => {
+        setBudget(prev => ({
+            ...prev,
+            categories: prev.categories.filter(c => c.id !== categoryId),
+            transactions: prev.transactions.filter(t => t.categoryId !== categoryId)
+        }))
+    };
+
+    const deleteTransaction = (transactionId) => {
+        setBudget(prev => ({
+            ...prev,
+            transactions: prev.transactions.filter(t => t.id !== transactionId)
+        }))
+    };
+
     return (
         <BudgetContext.Provider value={{
             budget,
             addTransaction,
             addCategory,
-            getCategorySpending
+            getCategorySpending,
+            deleteCategory,
+            deleteTransaction,
+            alerts,
+            removeAlert
         }}>
             {children}
         </BudgetContext.Provider>

@@ -6,6 +6,7 @@ export default function CategoryForm() {
     const { addCategory } = useBudget()
     const [formData, setFormData] = useState({
         name: '',
+        type: 'expense',
         limit: '',
         color: '#' + Math.floor(Math.random() * 16777215).toString(16)
     })
@@ -18,6 +19,7 @@ export default function CategoryForm() {
         })
         setFormData({
             name: '',
+            type: 'expense',
             limit: '',
             color: '#' + Math.floor(Math.random() * 16777215).toString(16)
         })
@@ -40,7 +42,21 @@ export default function CategoryForm() {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Limit</label>
+                    <label className="block text-sm font-medium text-gray-700">Kategori Tipi</label>
+                    <select
+                        value={formData.type}
+                        onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    >
+                        <option value="expense">Gider</option>
+                        <option value="income">Gelir</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-700">
+                        {formData.type === 'expense' ? 'Harcama Limiti' : 'Hedef Gelir'}
+                    </label>
                     <input
                         type="number"
                         value={formData.limit}

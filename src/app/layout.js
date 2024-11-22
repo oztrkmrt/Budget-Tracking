@@ -1,6 +1,7 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import { BudgetProvider } from "./context/BudgetContext";
+import AlertList from "./components/UI/AlertList";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -23,6 +24,7 @@ export default function RootLayout({ children }) {
     <html lang="tr">
       <body>
         <BudgetProvider>
+          <AlertList />
           <div className="min-h-screen bg-gray-100">
             {children}
           </div>

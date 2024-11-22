@@ -1,9 +1,10 @@
 import { useBudget } from "@/app/context/BudgetContext"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function TransactionForm() {
 
     const { addTransaction, budget } = useBudget();
+
     const [formData, setFormData] = useState({
         description: '',
         amount: '',
@@ -11,6 +12,17 @@ export default function TransactionForm() {
         categoryId: '',
         date: new Date().toISOString().split('T')[0]
     });
+
+    const filteredCategories = budget.categories.filter(
+        category => category.type === formData.type
+    );
+
+    useEffect(() => {
+        setFormData(prev => ({
+            ...prev,
+            categoryId: ''
+        }))
+    }, [formData.type]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -74,12 +86,17 @@ export default function TransactionForm() {
                         required
                     >
                         <option value="">Kategori Seçin</option>
-                        {budget.categories.map(category => (
+                        {filteredCategories.map(category => (
                             <option key={category.id} value={category.id}>
                                 {category.name}
                             </option>
                         ))}
                     </select>
+                    {filteredCategories.length === 0 && (
+                        <p className="mt-1 text-sm text-red-500">
+                            Bu işlem tipi için henüz kategori bulunmamaktadır.
+                        </p>
+                    )}
                 </div>
 
                 <div>
@@ -99,7 +116,6 @@ export default function TransactionForm() {
                 >
                     İşlem Ekle
                 </button>
-
             </div>
         </form>
     )
