@@ -10,11 +10,7 @@ import TransactionList from "./components/Transactions/TransactionList"
 
 export default function Home() {
   return (
-    <main className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8">
-        Kişisel Bütçe Takip
-      </h1>
-
+    <div className="space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="lg:col-span-2">
           <BudgetSummary />
@@ -30,6 +26,6 @@ export default function Home() {
           <ExpenseChart />
         </div>
       </div>
-    </main>
+    </div>
   )
 }
