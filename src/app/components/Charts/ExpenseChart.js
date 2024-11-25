@@ -9,8 +9,7 @@ import {
 } from 'recharts'
 
 export default function ExpenseChart() {
-
-    const { budget } = useBudget();
+    const { budget } = useBudget()
 
     const expensesByCategory = budget.categories.map(category => {
         const totalExpense = budget.transactions
@@ -28,18 +27,44 @@ export default function ExpenseChart() {
 
     if (expensesByCategory.length === 0) {
         return (
-            <div className="bg-white p-6 rounded-lg shadow-md">
-                <h2 className="text-xl font-semibold mb-4">Harcama Dağılımı</h2>
-                <p className="text-gray-500 text-center py-8">
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
+                    Harcama Dağılımı
+                </h2>
+                <p className="text-gray-500 dark:text-gray-400 text-center py-8">
                     Henüz harcama kaydı bulunmamaktadır.
                 </p>
             </div>
         )
     }
 
+    const CustomTooltip = ({ active, payload }) => {
+        if (active && payload && payload.length) {
+            return (
+                <div className="bg-white dark:bg-gray-700 p-2 rounded shadow-lg border border-gray-200 dark:border-gray-600">
+                    <p className="text-gray-900 dark:text-gray-100 font-medium">
+                        {payload[0].name}
+                    </p>
+                    <p className="text-gray-600 dark:text-gray-300">
+                        {payload[0].value.toLocaleString('tr-TR', {
+                            style: 'currency',
+                            currency: 'TRY'
+                        })}
+                    </p>
+                    <p className="text-gray-500 dark:text-gray-400">
+                        {((payload[0].value / totalExpenses) * 100).toFixed(1)}%
+                    </p>
+                </div>
+            )
+        }
+        return null
+    }
+
     return (
-        <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold mb-4">Harcama Dağılımı</h2>
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
+                Harcama Dağılımı
+            </h2>
 
             <div className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
@@ -69,6 +94,7 @@ export default function ExpenseChart() {
                                         fill="white"
                                         textAnchor="middle"
                                         dominantBaseline="central"
+                                        className="text-sm"
                                     >
                                         {`${(percent * 100).toFixed(1)}%`}
                                     </text>
@@ -79,21 +105,22 @@ export default function ExpenseChart() {
                                 <Cell key={index} fill={entry.color} />
                             ))}
                         </Pie>
-                        <Tooltip
-                            formatter={(value) => value.toLocaleString('tr-TR', {
-                                style: 'currency',
-                                currency: 'TRY'
-                            })}
+                        <Tooltip content={<CustomTooltip />} />
+                        <Legend
+                            formatter={(value, entry) => (
+                                <span className="text-gray-900 dark:text-gray-100">
+                                    {value}
+                                </span>
+                            )}
                         />
-                        <Legend />
                     </PieChart>
                 </ResponsiveContainer>
             </div>
 
             <div className="mt-4">
-                <p className="text-sm text-gray-600">
-                    Toplam Harcama: {' '}
-                    <span className="font-semibold">
+                <p className="text-sm text-gray-600 dark:text-gray-300">
+                    Toplam Harcama:{' '}
+                    <span className="font-semibold text-gray-900 dark:text-gray-100">
                         {totalExpenses.toLocaleString('tr-TR', {
                             style: 'currency',
                             currency: 'TRY'

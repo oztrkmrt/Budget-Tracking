@@ -22,11 +22,13 @@ export default function TransactionList() {
     )
 
     return (
-        <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold mb-4">İşlem Geçmişi</h2>
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
+                İşlem Geçmişi
+            </h2>
 
             {sortedTransactions.length === 0 ? (
-                <p className="text-gray-500 text-center py-4">
+                <p className="text-gray-500 dark:text-gray-400 text-center py-4">
                     Henüz işlem bulunmamaktadır.
                 </p>
             ) : (
@@ -34,12 +36,18 @@ export default function TransactionList() {
                     {sortedTransactions.map(transaction => (
                         <div
                             key={transaction.id}
-                            className="flex items-center justify-between p-4 border rounded-lg"
+                            className="flex items-center justify-between p-4 border dark:border-gray-700 
+                            rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 
+                            transition-colors duration-150"
                         >
                             <div className="flex-1">
                                 <div className="flex items-center justify-between mb-1">
-                                    <h3 className="font-medium">{transaction.description}</h3>
-                                    <span className={`font-semibold ${transaction.type === 'income' ? 'text-green-600' : 'text-red-600'
+                                    <h3 className="font-medium text-gray-900 dark:text-gray-100">
+                                        {transaction.description}
+                                    </h3>
+                                    <span className={`font-semibold ${transaction.type === 'income'
+                                            ? 'text-green-600 dark:text-green-400'
+                                            : 'text-red-600 dark:text-red-400'
                                         }`}>
                                         {transaction.type === 'income' ? '+' : '-'}
                                         {transaction.amount.toLocaleString('tr-TR', {
@@ -48,7 +56,7 @@ export default function TransactionList() {
                                         })}
                                     </span>
                                 </div>
-                                <div className="flex items-center justify-between text-sm text-gray-500">
+                                <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
                                     <div className="flex items-center space-x-2">
                                         <span>{getCategoryName(transaction.categoryId)}</span>
                                         <span>•</span>
@@ -59,13 +67,17 @@ export default function TransactionList() {
                                     <div className="flex items-center space-x-2">
                                         <button
                                             onClick={() => setEditingTransaction(transaction)}
-                                            className="text-blue-500 hover:text-blue-700"
+                                            className="text-blue-500 dark:text-blue-400 
+                                            hover:text-blue-700 dark:hover:text-blue-300 
+                                            transition-colors duration-150"
                                         >
                                             Düzenle
                                         </button>
                                         <button
                                             onClick={() => deleteTransaction(transaction.id)}
-                                            className="text-red-500 hover:text-red-700"
+                                            className="text-red-500 dark:text-red-400 
+                                            hover:text-red-700 dark:hover:text-red-300 
+                                            transition-colors duration-150"
                                         >
                                             Sil
                                         </button>
