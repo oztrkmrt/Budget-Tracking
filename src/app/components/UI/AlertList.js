@@ -23,28 +23,33 @@ export default function AlertList() {
     if (visibleAlerts.length === 0) return null
 
     return (
-        <div className="fixed top-4 right-4 z-50 space-y-2">
+        <div className="fixed top-24 right-4 z-40 space-y-2"> {/* top-20 -> top-24, z-50 -> z-40 */}
             {visibleAlerts.map(alert => (
                 <div
                     key={alert.id}
-                    className={`p-4 rounded-lg shadow-lg max-w-md transform transition-all duration-300 ${alert.type === 'danger'
-                        ? 'bg-red-100 border-l-4 border-red-500'
-                        : 'bg-yellow-100 border-l-4 border-yellow-500'
+                    className={`p-4 rounded-lg shadow-lg max-w-md transform transition-all duration-300 
+                    ${alert.type === 'danger'
+                            ? 'bg-red-100 dark:bg-red-900 border-l-4 border-red-500'
+                            : 'bg-yellow-100 dark:bg-yellow-900 border-l-4 border-yellow-500'
                         }`}
                 >
                     <div className="flex justify-between items-start">
                         <div className="flex-1">
-                            <p className={`text-sm font-medium ${alert.type === 'danger' ? 'text-red-800' : 'text-yellow-800'
+                            <p className={`text-sm font-medium 
+                            ${alert.type === 'danger'
+                                    ? 'text-red-800 dark:text-red-200'
+                                    : 'text-yellow-800 dark:text-yellow-200'
                                 }`}>
                                 {alert.message}
                             </p>
                         </div>
                         <button
                             onClick={() => removeAlert(alert.id)}
-                            className={`ml-4 text-sm font-medium ${alert.type === 'danger'
-                                ? 'text-red-500 hover:text-red-700'
-                                : 'text-yellow-500 hover:text-yellow-700'
-                                }`}
+                            className={`ml-4 text-sm font-medium 
+                            ${alert.type === 'danger'
+                                    ? 'text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300'
+                                    : 'text-yellow-500 hover:text-yellow-700 dark:text-yellow-400 dark:hover:text-yellow-300'
+                                } transition-colors duration-150`}
                         >
                             ✕
                         </button>
